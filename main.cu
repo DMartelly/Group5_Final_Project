@@ -15,6 +15,7 @@ int main(){
 int* generateAdjMatrix(int count, int* adjMatrix){
    adjMatrix = (int *)malloc(count*count*sizeof(int));
    int i;
+   srand(time(NULL));
    for (i = 0; i < count * count; i++){
       adjMatrix[i] = rand() % 2;
    }
