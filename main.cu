@@ -12,16 +12,24 @@ int main(){
    return 0;
 }
 
+//Creates an adjacency matrix
+//	count - the size of the matrix. the size is count X count)
+//	adjMatrix - a pointer to an adjacency Matrix
 int* generateAdjMatrix(int count, int* adjMatrix){
    adjMatrix = (int *)malloc(count*count*sizeof(int));
    int i;
+
+   //Set the random seed to the current time
    srand(time(NULL));
+
+   //Create a random matrix using rand
    for (i = 0; i < count * count; i++){
       adjMatrix[i] = rand() % 2;
    }
    return adjMatrix;
 }
 
+//Prints the adjacency matrix to stdout
 void printAdjMatrix(int count, int* adjMatrix){
    int i;
    for (i = 0; i < count; i++){
