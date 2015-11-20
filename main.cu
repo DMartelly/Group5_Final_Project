@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 void printAdjMatrix(int count, int* adjMatrix);
 
 int main(){
