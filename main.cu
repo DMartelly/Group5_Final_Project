@@ -1,19 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
+int* generateAdjMatrix(int count, int* adjMatrix);
 void printAdjMatrix(int count, int* adjMatrix);
 
 int main(){
-   int* adjMatrix;
+   int* adjMatrix = NULL;
    int count = 10;
-   adjMatrix = (int *)malloc(sizeof(int));
-   int i;
-   for (i = 0; i < count * count; i++){
-      adjMatrix[i] = rand() % 2;      
-   }
+   adjMatrix = generateAdjMatrix(count, adjMatrix);
    printAdjMatrix(count, adjMatrix);
    return 0;
+}
+
+int* generateAdjMatrix(int count, int* adjMatrix){
+   adjMatrix = (int *)malloc(count*count*sizeof(int));
+   int i;
+   for (i = 0; i < count * count; i++){
+      adjMatrix[i] = rand() % 2;
+   }
+   return adjMatrix;
 }
 
 void printAdjMatrix(int count, int* adjMatrix){
