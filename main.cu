@@ -5,8 +5,15 @@ const int NUM_OF_NODES = 10;
 int* generateAdjMatrix(int NUM_OF_NODES, int* adjMatrix);
 void printAdjMatrix(int NUM_OF_NODES, int* adjMatrix);
 
-int main(){
+int main(int argc, char* argv[]){
    int* adjMatrix = NULL;
+	 int count;
+	 if(argc > 2){
+		 fprintf(stderr,"Usage: %s <node count>\n",argv[0]);
+		 return 1;
+	 }
+	 if(argc==1) count = 10;
+	 else count = atoi(argv[1]);
    adjMatrix = generateAdjMatrix(NUM_OF_NODES, adjMatrix);
    printAdjMatrix(NUM_OF_NODES, adjMatrix);
    return 0;
