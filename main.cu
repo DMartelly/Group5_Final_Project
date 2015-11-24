@@ -4,6 +4,7 @@
 int* generateAdjMatrix(int count, int* adjMatrix);
 void printAdjMatrix(int count, int* adjMatrix);
 
+//This is the main function
 int main(int argc, char* argv[]){
    int* adjMatrix = NULL;
 	 int count;
