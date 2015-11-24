@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const int NUM_OF_NODES = 10;
-int* generateAdjMatrix(int NUM_OF_NODES, int* adjMatrix);
-void printAdjMatrix(int NUM_OF_NODES, int* adjMatrix);
+int* generateAdjMatrix(int count, int* adjMatrix);
+void printAdjMatrix(int count, int* adjMatrix);
 
 int main(int argc, char* argv[]){
    int* adjMatrix = NULL;
@@ -14,8 +13,8 @@ int main(int argc, char* argv[]){
 	 }
 	 if(argc==1) count = 10;
 	 else count = atoi(argv[1]);
-   adjMatrix = generateAdjMatrix(NUM_OF_NODES, adjMatrix);
-   printAdjMatrix(NUM_OF_NODES, adjMatrix);
+   adjMatrix = generateAdjMatrix(count, adjMatrix);
+   printAdjMatrix(count, adjMatrix);
    return 0;
 }
 
