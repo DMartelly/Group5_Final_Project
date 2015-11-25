@@ -8,12 +8,23 @@ void printAdjMatrix(int count, int* adjMatrix);
 int main(int argc, char* argv[]){
    int* adjMatrix = NULL;
 	 int count;
-	 if(argc > 2){
+	 int length;
+	 if(argc > 3){
 		 fprintf(stderr,"Usage: %s <node count>\n",argv[0]);
 		 return 1;
 	 }
-	 if(argc==1) count = 10;
-	 else count = atoi(argv[1]);
+	 if(argc==1) {
+	 	count = 10;
+	 	path = 2;
+	 }
+	 else if(argc == 2){
+		count = atoi(argv[1]);
+		path = 2;
+	 }else {
+	 	count = atoi(argv[1]);
+                path = atoi(argv[2]);
+	 }
+	 
    adjMatrix = generateAdjMatrix(count, adjMatrix);
    printAdjMatrix(count, adjMatrix);
    return 0;
@@ -54,3 +65,5 @@ void printAdjMatrix(int count, int* matrix){
       printf("\n");
    }
 }
+
+
