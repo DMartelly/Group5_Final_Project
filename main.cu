@@ -3,7 +3,7 @@
 
 int* generateAdjMatrix(int count, int* adjMatrix);
 void printAdjMatrix(int count, int* adjMatrix);
-int* multiplyMatrix(int* in,int count);
+int* multiplyMatrix(int* in,int* in2, int num,int count);
 
 //This is the main function
 int main(int argc, char* argv[]){
@@ -30,7 +30,7 @@ int main(int argc, char* argv[]){
 	 
 	adjMatrix = generateAdjMatrix(count, adjMatrix);
 	printAdjMatrix(count, adjMatrix);
-	multipliedMatrix = multiplyMatrix(adjMatrix,count);
+	multipliedMatrix = multiplyMatrix(adjMatrix,adjMatrix,path,count);
 	printf("\n");
 	printAdjMatrix(count, multipliedMatrix);
 	return 0;
@@ -60,7 +60,9 @@ int* generateAdjMatrix(int count, int* matrix){
    return matrix;
 }
 
-int* multiplyMatrix(int* in,int count){
+//Square a given matrix: in.
+int* multiplyMatrix(int* in,int* in2,int num, int count){
+	if(num==0) return in2;
 	int arr[count];
 	int i,j,k;
 	int z,n=0;
@@ -68,7 +70,7 @@ int* multiplyMatrix(int* in,int count){
 	for(i=0; i<count; i++){
 		for(j=0; j<count; j++){
 			for(k=0;k<count;k++){
-				arr[k] = in[(i*count)+k] * in[(k*count)+j];
+				arr[k] = in[(i*count)+k] * in2[(k*count)+j];
 			}
 			for(z=0;z<count;z++){
 				n+=arr[z];	
@@ -77,7 +79,7 @@ int* multiplyMatrix(int* in,int count){
 			n=0;
 		}
 	}
-	return out;
+	return multiplyMatrix(in,out,num-1,count);
 }
 
 //Prints the adjacency matrix to stdout
