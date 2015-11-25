@@ -6,7 +6,7 @@ void printAdjMatrix(int count, int* adjMatrix);
 
 int main(){
    int* adjMatrix = NULL;
-   int count = 10;
+   int count = 100;
    adjMatrix = generateAdjMatrix(count, adjMatrix);
    printAdjMatrix(count, adjMatrix);
    return 0;
