@@ -3,31 +3,37 @@
 
 int* generateAdjMatrix(int count, int* adjMatrix);
 void printAdjMatrix(int count, int* adjMatrix);
+int* multiplyMatrix(int* in,int count);
 
 //This is the main function
 int main(int argc, char* argv[]){
-   int* adjMatrix = NULL;
-	 int count;
-	 int length;
-	 if(argc > 3){
+	int* adjMatrix = NULL;
+	int* multipliedMatrix = NULL;
+	int count;
+	int path;
+	if(argc > 3){
 		 fprintf(stderr,"Usage: %s <node count>\n",argv[0]);
 		 return 1;
-	 }
-	 if(argc==1) {
+	}
+	if(argc==1) {
 	 	count = 10;
 	 	path = 2;
-	 }
-	 else if(argc == 2){
+	}
+	else if(argc == 2){
 		count = atoi(argv[1]);
 		path = 2;
-	 }else {
+	}
+	else {
 	 	count = atoi(argv[1]);
-                path = atoi(argv[2]);
+		path = atoi(argv[2]);
 	 }
 	 
-   adjMatrix = generateAdjMatrix(count, adjMatrix);
-   printAdjMatrix(count, adjMatrix);
-   return 0;
+	adjMatrix = generateAdjMatrix(count, adjMatrix);
+	printAdjMatrix(count, adjMatrix);
+	multipliedMatrix = multiplyMatrix(adjMatrix,count);
+	printf("\n");
+	printAdjMatrix(count, multipliedMatrix);
+	return 0;
 }
 
 //Creates an adjacency matrix
@@ -50,8 +56,28 @@ int* generateAdjMatrix(int count, int* matrix){
             matrix[(j *count) + i] = randomResult;
          }
       }
-   }
+	}
    return matrix;
+}
+
+int* multiplyMatrix(int* in,int count){
+	int arr[count];
+	int i,j,k;
+	int z,n=0;
+	int* out = (int *) malloc(sizeof(int)*count*count);
+	for(i=0; i<count; i++){
+		for(j=0; j<count; j++){
+			for(k=0;k<count;k++){
+				arr[k] = in[(i*count)+k] * in[(k*count)+j];
+			}
+			for(z=0;z<count;z++){
+				n+=arr[z];	
+			}
+			out[(i*count)+j] = n;
+			n=0;
+		}
+	}
+	return out;
 }
 
 //Prints the adjacency matrix to stdout
