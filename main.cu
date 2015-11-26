@@ -15,7 +15,7 @@ int main(int argc, char* argv[]){
 		 fprintf(stderr,"Usage: %s <node count>\n",argv[0]);
 		 return 1;
 	}
-	if(argc==1) {
+	if(argc==1){
 	 	count = 10;
 	 	path = 2;
 	}
@@ -23,10 +23,10 @@ int main(int argc, char* argv[]){
 		count = atoi(argv[1]);
 		path = 2;
 	}
-	else {
+	else{
 	 	count = atoi(argv[1]);
 		path = atoi(argv[2]);
-	 }
+	}
 	 
 	adjMatrix = generateAdjMatrix(count, adjMatrix);
 	printAdjMatrix(count, adjMatrix);
@@ -40,24 +40,23 @@ int main(int argc, char* argv[]){
 //	count - the size of the matrix. the size is count X count)
 //	matrix - a pointer to an adjacency Matrix
 int* generateAdjMatrix(int count, int* matrix){
-   matrix = (int *)malloc(count*count*sizeof(int));
-   int i, j;
+	matrix = (int *)malloc(count*count*sizeof(int));
+	int i, j;
 
-   //Set the random seed to the current time
-   srand(time(NULL));
+	//Set the random seed to the current time
+	srand(time(NULL));
 
-   //Create a random adjacency matrix using rand
-   for (i = 0; i < count; i++){
-      for(j = 0; j < count; j++){
-         if(i != j)
-         {
-            int randomResult = rand() % 2;
-            matrix[(i *count) + j] = randomResult;
-            matrix[(j *count) + i] = randomResult;
-         }
-      }
+	//Create a random adjacency matrix using rand
+	for (i = 0; i < count; i++){
+		for(j = 0; j < count; j++){
+			if(i != j){
+				int randomResult = rand() % 2;
+				matrix[(i *count) + j] = randomResult;
+				matrix[(j *count) + i] = randomResult;
+			}
+		}
 	}
-   return matrix;
+	return matrix;
 }
 
 //Square a given matrix: in.
@@ -67,6 +66,7 @@ int* multiplyMatrix(int* in,int* in2,int num, int count){
 	int i,j,k;
 	int z,n=0;
 	int* out = (int *) malloc(sizeof(int)*count*count);
+	
 	for(i=0; i<count; i++){
 		for(j=0; j<count; j++){
 			for(k=0;k<count;k++){
@@ -84,14 +84,13 @@ int* multiplyMatrix(int* in,int* in2,int num, int count){
 
 //Prints the adjacency matrix to stdout
 void printAdjMatrix(int count, int* matrix){
-   int i;
-   for (i = 0; i < count; i++){
-      int j;
-      for (j = 0; j < count; j++){
-         printf("%i  ", matrix[(i * count) + j]);
-      } 
-      printf("\n");
-   }
+	int i;
+	for (i = 0; i < count; i++){
+		int j;
+		for (j = 0; j < count; j++){
+			printf("%i  ", matrix[(i * count) + j]);
+		} 
+		printf("\n");
+	}
 }
-
 
