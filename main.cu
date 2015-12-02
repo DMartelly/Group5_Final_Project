@@ -28,7 +28,6 @@ int main(int argc, char* argv[]){
 	 	count = atoi(argv[1]);
 		path = atoi(argv[2]);
 	}
-	 
 	adjMatrix = generateAdjMatrix(count, adjMatrix);
 	
 	cudaMalloc(&gpuMatrix, (count*count*sizeof(int)));
