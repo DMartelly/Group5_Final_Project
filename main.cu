@@ -11,27 +11,36 @@ void matrixMultiplication(int count, int path, int* matrix);
 //This is the main function
 int main(int argc, char* argv[]){
 	int* adjMatrix = NULL;
-//	int* gpuMatrix;
-//	int* multipliedMatrix = NULL;
+	//int* gpuMatrix;
+	//int* multipliedMatrix = NULL;
 	int count;
 	int path;
+	
+	//If there is more than 2 parameters
 	if(argc > 3){
 		 fprintf(stderr,"Usage: %s <node count>\n",argv[0]);
 		 return 1;
 	}
+	//If there are no parameters
 	if(argc==1){
 	 	count = 10;
 	 	path = 2;
 	}
+	//If there is only one parameter
 	else if(argc == 2){
 		count = atoi(argv[1]);
 		path = 2;
 	}
+	//If 2 parameters are given
 	else{
 	 	count = atoi(argv[1]);
 		path = atoi(argv[2]);
 	}
+
+	//adjMatrix now equals a new Random adjancency  Matrix
 	adjMatrix = generateAdjMatrix(count, adjMatrix);
+
+	//Compute the GPU function
 	matrixMultiplication(count, path, adjMatrix);	
 	return 0;
 }
@@ -52,26 +61,44 @@ __global__ void multiply(int* matrix, int* multipliedMatrix, int count){
 
 
 //Prep for calling the gpu matrix multiplication function
-
 void matrixMultiplication(int count, int path, int* matrix){
+	
 	int numThreads = NUMTHREADS;
+	
+	//An adjacency matrix on the GPU
 	int* gpuMatrix;
+
+	//The multiplied matrix on the GPU
+	int* gpuMM;
+
+	//A matrix that will store gpuMM on the CPU
 	int* multipliedMatrix = (int*)malloc(count*count*sizeof(int));
-	int* gpuMM;//gpu multiplied matrix
-	int numBlocks;
-	numBlocks = (count*count)/numThreads + 1;
+
+	//The number of GPUS
+	int numBlocks = (count*count)/numThreads + 1;
+
+	//Allocate the memory on the GPU
         cudaMalloc(&gpuMatrix, (count*count*sizeof(int)));
 	cudaMalloc(&gpuMM, (count*count*sizeof(int)));
+
+	//Copy the input matrix from the CPU to the GPU (matrix -> gpuMatrix)
         cudaMemcpy(gpuMatrix, matrix, (count*count*sizeof(int)), cudaMemcpyHostToDevice);
 
+	//Preform the multiplied matrix function on gpuMatrix and store into gpuMM
 	multiply<<<numBlocks, numThreads>>>(gpuMatrix, gpuMM, count);
 
-	cudaMemcpy(matrix, gpuMatrix, (count*count*sizeof(int)), cudaMemcpyDeviceToHost);
+	//Copy gpuMM from the GPU to the CPU in multipiedMatrix
 	cudaMemcpy(multipliedMatrix, gpuMM, (count*count*sizeof(int)), cudaMemcpyDeviceToHost);
-        printAdjMatrix(count, matrix);
+        
+	//Print the input matrix
+	printAdjMatrix(count, matrix);
 	printf("\n");
-       // multipliedMatrix = multiplyMatrix(matrix,matrix,path,count);
+
+	//Print the multiplied matrix, copied earlier from the GPU
         printAdjMatrix(count, multipliedMatrix);
+	print("\n");
+	
+
 	multipliedMatrix = multiplyMatrix(matrix,matrix,path,count);
 	printf("\n");
 	printAdjMatrix(count, multipliedMatrix);
