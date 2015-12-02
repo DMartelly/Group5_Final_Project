@@ -4,12 +4,15 @@
 int* generateAdjMatrix(int count, int* adjMatrix);
 void printAdjMatrix(int count, int* adjMatrix);
 int* multiplyMatrix(int* in,int* in2, int num,int count);
+void matrixMultiplication(int count, int path, int* matrix);
+
+#define NUMTHREADS 1024;
 
 //This is the main function
 int main(int argc, char* argv[]){
 	int* adjMatrix = NULL;
-	int* gpuMatrix;
-	int* multipliedMatrix = NULL;
+//	int* gpuMatrix;
+//	int* multipliedMatrix = NULL;
 	int count;
 	int path;
 	if(argc > 3){
@@ -30,14 +33,34 @@ int main(int argc, char* argv[]){
 	}
 	 
 	adjMatrix = generateAdjMatrix(count, adjMatrix);
-	
-	cudaMalloc(&gpuMatrix, (count*count*sizeof(int)));
-	cudaMemcpy(gpuMatrix, adjMatrix, (count*count*sizeof(int)), cudaMemcpyHostToDevice);	
-	printAdjMatrix(count, adjMatrix);
-	multipliedMatrix = multiplyMatrix(adjMatrix,adjMatrix,path,count);
-	printf("\n");
-	printAdjMatrix(count, multipliedMatrix);
+	matrixMultiplication(count, path, adjMatrix);	
+//	cudaMalloc(&gpuMatrix, (count*count*sizeof(int)));
+//	cudaMemcpy(gpuMatrix, adjMatrix, (count*count*sizeof(int)), cudaMemcpyHostToDevice);	
+//	printAdjMatrix(count, adjMatrix);
+//	multipliedMatrix = multiplyMatrix(adjMatrix,adjMatrix,path,count);
+//	printf("\n");
+//	printAdjMatrix(count, multipliedMatrix);
 	return 0;
+}
+
+__global__ void multiply(int* matrix, int* multipliedMatrix, int count){
+        int element = blockIdx.x*blockDim.x + threadIdx.x;
+
+}
+
+/*
+Prep for calling the gpu matrix multiplication function
+*/
+void matrixMultiplication(int count, int path, int* matrix){
+	int* gpuMatrix;
+	int* multipliedMatrix = NULL;
+	int numBlocks = (count*count)/NUMTHREADS + 1;
+        cudaMalloc(&gpuMatrix, (count*count*sizeof(int)));
+        cudaMemcpy(gpuMatrix, matrix, (count*count*sizeof(int)), cudaMemcpyHostToDevice);
+        printAdjMatrix(count, matrix);
+        multipliedMatrix = multiplyMatrix(matrix,matrix,path,count);
+        printf("\n");
+        printAdjMatrix(count, multipliedMatrix);
 }
 
 //Creates an adjacency matrix
