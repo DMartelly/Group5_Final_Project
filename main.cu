@@ -33,12 +33,6 @@ int main(int argc, char* argv[]){
 	}
 	adjMatrix = generateAdjMatrix(count, adjMatrix);
 	matrixMultiplication(count, path, adjMatrix);	
-//	cudaMalloc(&gpuMatrix, (count*count*sizeof(int)));
-//	cudaMemcpy(gpuMatrix, adjMatrix, (count*count*sizeof(int)), cudaMemcpyHostToDevice);	
-//	printAdjMatrix(count, adjMatrix);
-//	multipliedMatrix = multiplyMatrix(adjMatrix,adjMatrix,path,count);
-//	printf("\n");
-//	printAdjMatrix(count, multipliedMatrix);
 	return 0;
 }
 
@@ -56,9 +50,9 @@ __global__ void multiply(int* matrix, int* multipliedMatrix, int count){
 	multipliedMatrix[element] = sum;
 }
 
-/*
-Prep for calling the gpu matrix multiplication function
-*/
+
+//Prep for calling the gpu matrix multiplication function
+
 void matrixMultiplication(int count, int path, int* matrix){
 	int numThreads = NUMTHREADS;
 	int* gpuMatrix;
