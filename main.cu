@@ -40,13 +40,10 @@ __global__ void multiply(int* matrix, int* multipliedMatrix, int count){
         int element = blockIdx.x*blockDim.x + threadIdx.x;
 	int sum = 0;
 	int i;
-	int col = element - (element % count);
+	int col = element % count;
 	int row = element / count;
-//	cuprintf("\n%d %d %d\n", );
 	for(i=0; i < count; i++){
-		sum+=matrix[col]*matrix[row];
-		row+=count;
-		col++;
+		sum+=matrix[count*i + col]*matrix[row*count + i];
 	}
 	multipliedMatrix[element] = sum;
 }
