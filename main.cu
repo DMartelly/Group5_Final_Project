@@ -8,6 +8,7 @@ int* multiplyMatrix(int* in,int* in2, int num,int count);
 //This is the main function
 int main(int argc, char* argv[]){
 	int* adjMatrix = NULL;
+	int* gpuMatrix;
 	int* multipliedMatrix = NULL;
 	int count;
 	int path;
@@ -30,8 +31,8 @@ int main(int argc, char* argv[]){
 	 
 	adjMatrix = generateAdjMatrix(count, adjMatrix);
 	
-	cudaMalloc(&adjMatrix, (count*count*sizeof(int)));
-	
+	cudaMalloc(&gpuMatrix, (count*count*sizeof(int)));
+	cudaMemcpy(gpuMatrix, adjMatrix, (count*count*sizeof(int)), cudaMemcpyHostToDevice);	
 	printAdjMatrix(count, adjMatrix);
 	multipliedMatrix = multiplyMatrix(adjMatrix,adjMatrix,path,count);
 	printf("\n");
