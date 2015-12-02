@@ -199,7 +199,7 @@ void printAdjMatrix(int count, int* matrix){
 	for (i = 0; i < count; i++){
 		int j;
 		for (j = 0; j < count; j++){
-			printf("%4i ", matrix[(i * count) + j]);
+			printf("%3i ", matrix[(i * count) + j]);
 		} 
 		printf("\n");
 	}
