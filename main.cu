@@ -29,6 +29,9 @@ int main(int argc, char* argv[]){
 	}
 	 
 	adjMatrix = generateAdjMatrix(count, adjMatrix);
+	
+	cudaMalloc(&adjMatrix, (count*count*sizeof(int)));
+	
 	printAdjMatrix(count, adjMatrix);
 	multipliedMatrix = multiplyMatrix(adjMatrix,adjMatrix,path,count);
 	printf("\n");
