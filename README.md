@@ -2,6 +2,9 @@ Readme file
 
 This program finds how many N-length paths there are in a given undirected graph, and displays each unique path
 
+To run program:
+./main (<number of nodes> <number of paths>  / [-d]) [-t]
+
 Professors Message:
 
 I have looked online and quite surprisingly have not found a CUDA implementation of the "paths of length N" problem on a graph.  It seems that for reasonably sized graphs once N becomes above 15 the runtime becomes impractical.  It thus sounds like a good problem to pursue in terms of computational intensity.
