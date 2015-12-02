@@ -51,9 +51,10 @@ __global__ void multiply(int* matrix, int* multipliedMatrix, int count){
 	int i;
 	int col = element - (element % count);
 	int row = element / count;
+//	cuprintf("\n%d %d %d\n", );
 	for(i=0; i < count; i++){
 		sum+=matrix[col]*matrix[row];
-		row++;
+		row+=count;
 		col++;
 	}
 	multipliedMatrix[element] = sum;
