@@ -84,17 +84,17 @@ void matrixMultiplication(int count, int path, int* matrix){
 
 	//Preform the multiplied matrix function on gpuMatrix and store into gpuMM
 	multiply<<<numBlocks, numThreads>>>(gpuMatrix, gpuMM, count);
-
+	
 	//Copy gpuMM from the GPU to the CPU in multipiedMatrix
 	cudaMemcpy(multipliedMatrix, gpuMM, (count*count*sizeof(int)), cudaMemcpyDeviceToHost);
         
 	//Print the input matrix
 	printAdjMatrix(count, matrix);
 	printf("\n");
-
+	
 	//Print the multiplied matrix, copied earlier from the GPU
         printAdjMatrix(count, multipliedMatrix);
-	print("\n");
+	printf("\n");
 	
 
 	multipliedMatrix = multiplyMatrix(matrix,matrix,path,count);
