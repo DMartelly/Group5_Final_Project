@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/time.h>
 
 int* generateAdjMatrix(int count, int* adjMatrix);
 void printAdjMatrix(int count, int* adjMatrix);
@@ -9,42 +10,45 @@ void GPUMatrixMultiplication(int count, int path, int* matrix);
 
 #define NUMTHREADS 1024;
 
+int fTime = 0;
+
 //This is the main function
 int main(int argc, char* argv[]){
-	int* adjMatrix = NULL;
-	//int* gpuMatrix;
-	//int* multipliedMatrix = NULL;
 	int count;
 	int path;
+	int* adjMatrix = NULL;
 	
 	//If there is more than 2 parameters
-	if(argc > 3){
-		 fprintf(stderr,"Usage: %s <node count>\n",argv[0]);
+	if(argc == 1){
+		 fprintf(stderr,"Usage:\n%s <node count> <num of paths> [-t]\n%s [-d] [-t]\n", argv[0], argv[0]);
 		 return 1;
 	}
-	//If there are no parameters
-	if(argc==1){
+	//If default '-d' is passed
+	if(strncmp(argv[1], "-d", 2) == 0){
 	 	count = 10;
 	 	path = 2;
+		//If time '-t' is passed
+		if(argc == 3 && strncmp(argv[2], "-t", 2) == 0){
+		 	fTime = 1;
+		}
 	}
-	//If there is only one parameter
-	else if(argc == 2){
-		count = atoi(argv[1]);
-		path = 2;
-	}
-	//If 2 parameters are given
 	else{
-	 	count = atoi(argv[1]);
+		count = atoi(argv[1]);
 		path = atoi(argv[2]);
+		//If time '-t' is passed
+		if(argc == 4 && strncmp(argv[3], "-t", 2) == 0){
+		 	fTime = 1;
+		}
 	}
-
 	//adjMatrix now equals a new Random adjancency  Matrix
 	adjMatrix = generateAdjMatrix(count, adjMatrix);
 
 	//Print the generated adjancency matrix
-	printf("Generated Adjancency Matritx:\n");
-	printAdjMatrix(count, adjMatrix);
-	printf("\n");
+	if (!fTime){
+		printf("Generated Adjancency Matritx:\n");
+		printAdjMatrix(count, adjMatrix);
+		printf("\n");
+	}
 
 	//Compute the CPU function
 	CPUMatrixMultiplication(count, path, adjMatrix);
@@ -69,14 +73,25 @@ __global__ void multiply(int* matrix, int* multipliedMatrix, int count){
 //CPU matrix multiplication function
 void CPUMatrixMultiplication(int count, int path, int* matrix){
 	
+	//Create the time interval
+	struct timeval start, end;
+
+	//Start time
+	gettimeofday(&start, NULL);
 	
 	//The completed multiplied matrix
 	int* multipliedMatrix =  multiplyMatrix(matrix, matrix, path, count);	
 	
+	//End time
+	gettimeofday(&end, NULL);
+	long microseconds = end.tv_usec - start.tv_usec;
+	
 	//Print the multiplied matrix
 	printf("CPU Generated matrix:\n");
-	printAdjMatrix(count, multipliedMatrix);
-	printf("\n");
+	if (!fTime){
+		printAdjMatrix(count, multipliedMatrix);
+	}
+	printf("Took %li microseconds to compute\n\n", microseconds);
 
 }
 //GPU matrix multiplication function
@@ -100,6 +115,12 @@ void GPUMatrixMultiplication(int count, int path, int* matrix){
         cudaMalloc(&gpuMatrix, (count*count*sizeof(int)));
 	cudaMalloc(&gpuMM, (count*count*sizeof(int)));
 
+	//Create the time interval
+	struct timeval start, end;
+
+	//Start time
+	gettimeofday(&start, NULL);
+
 	//Copy the input matrix from the CPU to the GPU (matrix -> gpuMatrix)
         cudaMemcpy(gpuMatrix, matrix, (count*count*sizeof(int)), cudaMemcpyHostToDevice);
 
@@ -108,11 +129,17 @@ void GPUMatrixMultiplication(int count, int path, int* matrix){
 	
 	//Copy gpuMM from the GPU to the CPU in multipiedMatrix
 	cudaMemcpy(multipliedMatrix, gpuMM, (count*count*sizeof(int)), cudaMemcpyDeviceToHost);
+
+	//End time
+	gettimeofday(&end, NULL);
+	long microseconds = end.tv_usec - start.tv_usec;
         
 	//Print the multiplied matrix, copied earlier from the GPU
         printf("GPU Generated matrix:\n");
-	printAdjMatrix(count, multipliedMatrix);
-	printf("\n");
+	if (!fTime){
+		printAdjMatrix(count, multipliedMatrix);
+	}
+	printf("Took %li microseconds to compute\n", microseconds);
 }
 
 //Creates an adjacency matrix
