@@ -4,7 +4,8 @@
 int* generateAdjMatrix(int count, int* adjMatrix);
 void printAdjMatrix(int count, int* adjMatrix);
 int* multiplyMatrix(int* in,int* in2, int num,int count);
-void matrixMultiplication(int count, int path, int* matrix);
+void CPUMatrixMultiplication(int count, int path, int* matrix);
+void GPUMatrixMultiplication(int count, int path, int* matrix);
 
 #define NUMTHREADS 1024;
 
@@ -40,8 +41,16 @@ int main(int argc, char* argv[]){
 	//adjMatrix now equals a new Random adjancency  Matrix
 	adjMatrix = generateAdjMatrix(count, adjMatrix);
 
+	//Print the generated adjancency matrix
+	printf("Generated Adjancency Matritx:\n");
+	printAdjMatrix(count, adjMatrix);
+	printf("\n");
+
+	//Compute the CPU function
+	CPUMatrixMultiplication(count, path, adjMatrix);
+
 	//Compute the GPU function
-	matrixMultiplication(count, path, adjMatrix);	
+	GPUMatrixMultiplication(count, path, adjMatrix);	
 	return 0;
 }
 
@@ -57,9 +66,21 @@ __global__ void multiply(int* matrix, int* multipliedMatrix, int count){
 	multipliedMatrix[element] = sum;
 }
 
+//CPU matrix multiplication function
+void CPUMatrixMultiplication(int count, int path, int* matrix){
+	
+	
+	//The completed multiplied matrix
+	int* multipliedMatrix =  multiplyMatrix(matrix, matrix, path, count);	
+	
+	//Print the multiplied matrix
+	printf("CPU Generated matrix:\n");
+	printAdjMatrix(count, multipliedMatrix);
+	printf("\n");
 
-//Prep for calling the gpu matrix multiplication function
-void matrixMultiplication(int count, int path, int* matrix){
+}
+//GPU matrix multiplication function
+void GPUMatrixMultiplication(int count, int path, int* matrix){
 	
 	int numThreads = NUMTHREADS;
 	
@@ -88,18 +109,10 @@ void matrixMultiplication(int count, int path, int* matrix){
 	//Copy gpuMM from the GPU to the CPU in multipiedMatrix
 	cudaMemcpy(multipliedMatrix, gpuMM, (count*count*sizeof(int)), cudaMemcpyDeviceToHost);
         
-	//Print the input matrix
-	printAdjMatrix(count, matrix);
-	printf("\n");
-	
 	//Print the multiplied matrix, copied earlier from the GPU
-        printAdjMatrix(count, multipliedMatrix);
-	printf("\n");
-	
-
-	multipliedMatrix = multiplyMatrix(matrix,matrix,path,count);
-	printf("\n");
+        printf("GPU Generated matrix:\n");
 	printAdjMatrix(count, multipliedMatrix);
+	printf("\n");
 }
 
 //Creates an adjacency matrix
@@ -159,7 +172,7 @@ void printAdjMatrix(int count, int* matrix){
 	for (i = 0; i < count; i++){
 		int j;
 		for (j = 0; j < count; j++){
-			printf("%i  ", matrix[(i * count) + j]);
+			printf("%4i ", matrix[(i * count) + j]);
 		} 
 		printf("\n");
 	}
