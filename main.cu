@@ -86,9 +86,14 @@ int* generateAdjMatrix(int count, int* matrix){
 	return matrix;
 }
 
-//Square a given matrix: in.
-int* multiplyMatrix(int* in,int* in2,int num, int count){
-	if(num==0) return in2;
+//Returns a cross multiplied matrix of two matrixies
+//	in - the first matrix
+//	in2 - the second matrix
+//	num - the number of times we do the multiplacation
+//	size -
+__global__ int* multiplyMatrix(int* in,int* in2,int num, int count){
+	if(num==0)
+		return in2;
 	int arr[count];
 	int i,j,k;
 	int z,n=0;
