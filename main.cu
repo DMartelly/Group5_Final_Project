@@ -58,14 +58,14 @@ int main(int argc, char* argv[]){
 	return 0;
 }
 
-__global__ void multiply(int* matrix, int* multipliedMatrix, int count){
+__global__ void multiply(int* matrixA, int* matrixB, int* multipliedMatrix, int count){
         int element = blockIdx.x*blockDim.x + threadIdx.x;
 	int sum = 0;
 	int i;
 	int col = element % count;
 	int row = element / count;
 	for(i=0; i < count; i++){
-		sum+=matrix[count*i + col]*matrix[row*count + i];
+		sum+=matrixA[count*i + col]*matrixB[row*count + i];
 	}
 	multipliedMatrix[element] = sum;
 }
