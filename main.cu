@@ -45,9 +45,11 @@ int main(int argc, char* argv[]){
 		 		fTime = 1;
 			}
 			//If gpu only '-g' is passed
-			if(strcmp(argv[3],"-g")==0 || strcmp(argv[4],"-g")==0) gpuOnly=1;
+			if(strncmp(argv[3],"-g", 2)==0 || argc > 4 &&  strncmp(argv[4],"-g", 2)==0) gpuOnly=1;
 		}
 	}
+	path--;
+
 	//adjMatrix now equals a new Random adjancency  Matrix
 	adjMatrix = generateAdjMatrix(count, adjMatrix);
 
@@ -66,16 +68,20 @@ int main(int argc, char* argv[]){
 	return 0;
 }
 
-__global__ void multiply(int* matrixA, int* matrixB, int* multipliedMatrix, int count){
+__global__ void multiply(int* matrixA, int* multipliedMatrix, int paths, int count){
         int element = blockIdx.x*blockDim.x + threadIdx.x;
-	int sum = 0;
-	int i;
-	int col = element % count;
-	int row = element / count;
-	for(i=0; i < count; i++){
-		sum+=matrixA[count*i + col]*matrixB[row*count + i];
+	int i, j;
+	for(i=0; i < paths; i++)
+	{
+		int sum = 0;
+		int col = element % count;
+		int row = element / count;
+		for(j=0; j < count; j++){
+			sum+=matrixA[count*j + col]*multipliedMatrix[row*count + j];
+		}
+		__syncthreads();
+		multipliedMatrix[element] = sum;
 	}
-	multipliedMatrix[element] = sum;
 }
 
 //CPU matrix multiplication function
@@ -131,13 +137,11 @@ void GPUMatrixMultiplication(int count, int path, int* matrix){
 
 	//Copy the input matrix from the CPU to the GPU (matrix -> gpuMatrix)
         cudaMemcpy(gpuMatrix, matrix, (count*count*sizeof(int)), cudaMemcpyHostToDevice);
+        cudaMemcpy(gpuMM, matrix, (count*count*sizeof(int)), cudaMemcpyHostToDevice);
 	
 	//Preform the multiplied matrix function on gpuMatrix and store into gpuMM
-	multiply<<<numBlocks, numThreads>>>(gpuMatrix, gpugpuMM, count);
-	int i;
-	for(i = 2; i < path; i++){
-		
-	}
+	multiply<<<numBlocks, numThreads>>>(gpuMatrix, gpuMM, path, count);
+	
 	//Copy gpuMM from the GPU to the CPU in multipiedMatrix
 	cudaMemcpy(multipliedMatrix, gpuMM, (count*count*sizeof(int)), cudaMemcpyDeviceToHost);
 
