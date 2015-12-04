@@ -17,6 +17,7 @@ int main(int argc, char* argv[]){
 	int count;
 	int path;
 	int* adjMatrix = NULL;
+	int gpuOnly=0;
 	
 	//If there is more than 2 parameters
 	if(argc == 1){
@@ -28,16 +29,23 @@ int main(int argc, char* argv[]){
 	 	count = 10;
 	 	path = 2;
 		//If time '-t' is passed
-		if(argc == 3 && strncmp(argv[2], "-t", 2) == 0){
-		 	fTime = 1;
+		if(argc > 2){
+			if(strncmp(argv[2], "-t", 2) == 0){
+		 		fTime = 1;
+			}
+			if(strcmp(argv[2],"-g")==0 || strcmp(argv[3],"-g")==0) gpuOnly =1;
 		}
 	}
 	else{
 		count = atoi(argv[1]);
 		path = atoi(argv[2]);
-		//If time '-t' is passed
-		if(argc == 4 && strncmp(argv[3], "-t", 2) == 0){
-		 	fTime = 1;
+		if(argc > 3){
+			//If time '-t' is passed
+			if(strncmp(argv[3], "-t", 2) == 0){
+		 		fTime = 1;
+			}
+			//If gpu only '-g' is passed
+			if(strcmp(argv[3],"-g")==0 || strcmp(argv[4],"-g")==0) gpuOnly=1;
 		}
 	}
 	//adjMatrix now equals a new Random adjancency  Matrix
@@ -51,7 +59,7 @@ int main(int argc, char* argv[]){
 	}
 
 	//Compute the CPU function
-	CPUMatrixMultiplication(count, path, adjMatrix);
+	if(!gpuOnly) CPUMatrixMultiplication(count, path, adjMatrix);
 
 	//Compute the GPU function
 	GPUMatrixMultiplication(count, path, adjMatrix);	
