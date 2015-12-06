@@ -91,7 +91,7 @@ __global__ void traverse(int* matrix, int* paths, int count, int start, int end,
 	//current Node in the graph
 	int currNode = start;
 	//start is always the first Node
-	paths[element + currLength] = currNode;
+	paths[element*length + currLength] = currNode;
 	currLength++;
 	while(currLength != length){
 		if(currLength == length-1){
@@ -100,10 +100,12 @@ __global__ void traverse(int* matrix, int* paths, int count, int start, int end,
 			//a random transition we try to move to the end point
 			if(matrix[currNode * count + end] == 1){
 				currNode = end;
-				paths[element + currLength] = currNode;
+				paths[element*length + currLength] = currNode;
+				currLength++;
 			}else{//if we can't connect to the endpoint we restart
-				length = 0;
+				currLength = 1;
 				currNode = start;
+				paths[element*length + 0] = currNode;
 			}	
 		}else{
 			int randIdx;
@@ -111,7 +113,7 @@ __global__ void traverse(int* matrix, int* paths, int count, int start, int end,
 				randIdx = curand(&state) % count;
 			}while(matrix[currNode * count + randIdx] != 1);
 		        currNode = randIdx;
-			paths[element + currLength] = currNode;
+			paths[element*length + currLength] = currNode;
         		currLength++;
 		}
 	}
@@ -207,7 +209,16 @@ void GPUMatrixMultiplication(int count, int path, int* matrix, int nodeA, int no
 		int* paths = (int *)malloc(numPaths * sizeof(int) * (path+1));
 		int* gpuPaths;
 		cudaMalloc(&gpuPaths, (numPaths*path*sizeof(int)));
-				
+		traverse<<<numPaths, 1>>>(gpuMatrix, gpuPaths, count, nodeA, nodeB, path);
+		cudaMemcpy(paths, gpuPaths, (numPaths*(path+1)*sizeof(int)), cudaMemcpyDeviceToHost);	
+		int i;
+		for(i = 0; i < numPaths; i++){
+			int j;
+			for(j = 0; j < path; j++){
+				printf("%d ", paths[i*path + j]);
+			}
+			printf("\n");
+		}
 	}
 
 	gettimeofday(&end, NULL);
