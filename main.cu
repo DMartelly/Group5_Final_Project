@@ -31,6 +31,10 @@ int main(int argc, char* argv[]){
 	//If there is more than 2 parameters
 	opterr = 0;
 	int c;
+	if(argc==1) {
+		fprintf(stderr,"Usage:\n-t: print time only\n-d: default count to 10, path to 2\n-g: preform calculations on GPU only\n-c <num of nodes>\n-p <num of paths>");
+		return 1;
+	}
 
 	while((c = getopt (argc, argv, "dgtc:p:")) != -1){
 		switch (c)
