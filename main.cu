@@ -229,7 +229,8 @@ void GPUMatrixMultiplication(int count, int path, int* matrix, int nodeA, int no
 	//Copy gpuMM from the GPU to the CPU in multipiedMatrix
 	cudaMemcpy(multipliedMatrix, gpuMM, (count*count*sizeof(int)), cudaMemcpyDeviceToHost);
 	
-	
+	cudaFree(&gpuMM);	
+
         gettimeofday(&end, NULL);
         long microseconds = end.tv_usec - start.tv_usec;
 
@@ -247,11 +248,14 @@ void GPUMatrixMultiplication(int count, int path, int* matrix, int nodeA, int no
 		return;
 	}else{
 		path+=2;
+		numBlocks = numPaths / numThreads + 1;
 		int* paths = (int *)malloc(numPaths * sizeof(int) * (path));
 		int* gpuPaths;
 		cudaMalloc(&gpuPaths, (numPaths*path*sizeof(int)));
-		traverse<<<numPaths, 1>>>(gpuMatrix, gpuPaths, count, nodeA, nodeB, path, numPaths);
-		cudaMemcpy(paths, gpuPaths, (numPaths*(path)*sizeof(int)), cudaMemcpyDeviceToHost);	
+		traverse<<<numBlocks, numThreads>>>(gpuMatrix, gpuPaths, count, nodeA, nodeB, path, numPaths);
+		cudaMemcpy(paths, gpuPaths, (numPaths*(path)*sizeof(int)), cudaMemcpyDeviceToHost);
+
+		cudaFree(&gpuMM);
 		int i;
 		for(i = 0; i < numPaths; i++){
 			int j;
