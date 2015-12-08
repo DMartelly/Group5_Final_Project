@@ -1,9 +1,9 @@
 Readme file
 
-This program finds how many N-length paths there are in a given undirected graph, and displays each unique path
+This program finds all paths of length N there are in a given undirected graph from A to B, and displays each unique path
 
 To run program:
-./main (<number of nodes> <number of paths>  / [-d]) [-t]
+./main (<number of nodes> <number of paths>  / [-d]) [-t] [-g]
 
 Professors Message:
 

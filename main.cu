@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <curand.h>
+#include <unistd.h>
 #include <curand_kernel.h>
 
 int* generateAdjMatrix(int count, int* adjMatrix);
@@ -14,46 +15,54 @@ void CPUMatrixMultiplication(int count, int path, int* matrix);
 void GPUMatrixMultiplication(int count, int path, int* matrix, int start, int end);
 
 #define NUMTHREADS 1024;
-
 int fTime = 0;
+
 
 //This is the main function
 int main(int argc, char* argv[]){
 	int count;
 	int path;
 	int* adjMatrix = NULL;
-	int gpuOnly=0;
+	int gpuOnly = 0;
 
 	//start and end of the path
-	int start, end;	
+	int start, end;
+	
 	//If there is more than 2 parameters
-	if(argc == 1){
-		 fprintf(stderr,"Usage:\n%s <node count> <num of paths> [-t]\n%s [-d] [-t]\n", argv[0], argv[0]);
-		 return 1;
-	}
-	//If default '-d' is passed
-	if(strncmp(argv[1], "-d", 2) == 0){
-	 	count = 10;
-	 	path = 2;
-		//If time '-t' is passed
-		if(argc > 2){
-			if(strncmp(argv[2], "-t", 2) == 0){
-		 		fTime = 1;
-			}
-			if(strcmp(argv[2],"-g")==0 || strcmp(argv[3],"-g")==0) gpuOnly =1;
+	opterr = 0;
+	int c;
+
+	while((c = getopt (argc, argv, "dgti:p:")) != -1){
+		switch (c)
+		{
+			case 'd':
+				count = 10;
+				path = 2;
+				break;
+			case 'g':
+				gpuOnly = 1;
+				break;
+			case 't':
+				fTime = 1;
+				break;
+			case 'c':
+				count = atoi(optarg);
+				break;
+			case 'p':
+				path = atoi(optarg);
+				break;
+			case '?':
+				if (optopt == 'c' || optopt == 'p'){
+					fprintf (stderr, "Option -%c requires an argument.\n", optopt);
+				}
+				else{
+					fprintf(stderr,"Usage:\n-t: print time only\n-d: default count to 10, path to 2\n-g: preform calculations on GPU only\n-c <num of nodes>\n-p <num of paths>");
+				}
+				return 1;
+			default:
+				return 2;
 		}
-	}
-	else{
-		count = atoi(argv[1]);
-		path = atoi(argv[2]);
-		if(argc > 3){
-			//If time '-t' is passed
-			if(strncmp(argv[3], "-t", 2) == 0){
-		 		fTime = 1;
-			}
-			//If gpu only '-g' is passed
-			if(strncmp(argv[3],"-g", 2)==0 || argc > 4 &&  strncmp(argv[4],"-g", 2)==0) gpuOnly=1;
-		}
+	
 	}
 	path--;
 
