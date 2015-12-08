@@ -84,6 +84,8 @@ int main(int argc, char* argv[]){
 //an linear array just like the matrix
 __global__ void traverse(int* matrix, int* paths, int count, int start, int end, int length){
 	int element = blockIdx.x*blockDim.x + threadIdx.x;
+
+	//curand = cuda random for random number generation
 	curandState state;
 	curand_init((unsigned long)element, 0, 0, &state);
 	//current length of the path
@@ -200,17 +202,29 @@ void GPUMatrixMultiplication(int count, int path, int* matrix, int nodeA, int no
 	//Copy gpuMM from the GPU to the CPU in multipiedMatrix
 	cudaMemcpy(multipliedMatrix, gpuMM, (count*count*sizeof(int)), cudaMemcpyDeviceToHost);
 	
+	
+        gettimeofday(&end, NULL);
+        long microseconds = end.tv_usec - start.tv_usec;
+
+        //Print the multiplied matrix, copied earlier from the GPU
+        printf("GPU Generated matrix:\n");
+        if (!fTime){
+                printAdjMatrix(count, multipliedMatrix);
+        }
+        printf("Took %li microseconds to compute\n", microseconds);
+	printf("\n");	
 	//gets num paths and if no paths exists it shows that and exits
 	numPaths = multipliedMatrix[(nodeA * count) + nodeB];
 	if (numPaths == 0){
 		printf("No paths exist from %d to %d\n", nodeA, nodeB);
 		return;
 	}else{
-		int* paths = (int *)malloc(numPaths * sizeof(int) * (path+1));
+		path+=2;
+		int* paths = (int *)malloc(numPaths * sizeof(int) * (path));
 		int* gpuPaths;
 		cudaMalloc(&gpuPaths, (numPaths*path*sizeof(int)));
 		traverse<<<numPaths, 1>>>(gpuMatrix, gpuPaths, count, nodeA, nodeB, path);
-		cudaMemcpy(paths, gpuPaths, (numPaths*(path+1)*sizeof(int)), cudaMemcpyDeviceToHost);	
+		cudaMemcpy(paths, gpuPaths, (numPaths*(path)*sizeof(int)), cudaMemcpyDeviceToHost);	
 		int i;
 		for(i = 0; i < numPaths; i++){
 			int j;
@@ -220,16 +234,6 @@ void GPUMatrixMultiplication(int count, int path, int* matrix, int nodeA, int no
 			printf("\n");
 		}
 	}
-
-	gettimeofday(&end, NULL);
-	long microseconds = end.tv_usec - start.tv_usec;
-        
-	//Print the multiplied matrix, copied earlier from the GPU
-        printf("GPU Generated matrix:\n");
-	if (!fTime){
-		printAdjMatrix(count, multipliedMatrix);
-	}
-	printf("Took %li microseconds to compute\n", microseconds);
 }
 
 //Creates an adjacency matrix
