@@ -20,8 +20,8 @@ int fTime = 0;
 
 //This is the main function
 int main(int argc, char* argv[]){
-	int count;
-	int path;
+	int count = 10;
+	int path = 2;
 	int* adjMatrix = NULL;
 	int gpuOnly = 0;
 
@@ -31,6 +31,10 @@ int main(int argc, char* argv[]){
 	//If there is more than 2 parameters
 	opterr = 0;
 	int c;
+	if(argc==1) {
+		fprintf(stderr,"Usage:\n-t: print time only\n-d: default count to 10, path to 2\n-g: preform calculations on GPU only\n-c <num of nodes>\n-p <num of paths>\n");
+		return 1;
+	}
 
 	while((c = getopt (argc, argv, "dgtc:p:a:b:")) != -1){
 		switch (c)
@@ -62,7 +66,7 @@ int main(int argc, char* argv[]){
 					fprintf (stderr, "Option -%c requires an argument.\n", optopt);
 				}
 				else{
-					fprintf(stderr,"Usage:\n-t: print time only\n-d: default count to 10, path to 2\n-g: preform calculations on GPU only\n-c <num of nodes>\n-p <num of paths>");
+					fprintf(stderr,"Usage:\n-t: print time only\n-d: default count to 10, path to 2\n-g: preform calculations on GPU only\n-c <num of nodes>\n-p <num of paths>\n");
 				}
 				return 1;
 			default:
