@@ -3,7 +3,12 @@ Readme file
 This program finds all paths of length N there are in a given undirected graph from A to B, and displays each unique path
 
 To run program:
-./main (<number of nodes> <number of paths>  / [-d]) [-t] [-g]
+./main
+	-t: print time only
+	-d: default count to 10, path to 2
+	-g: preform calculations on GPU only
+	-c <num of nodes>:
+	-p <num of paths>:
 
 Professors Message:
 
