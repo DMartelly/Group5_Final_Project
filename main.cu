@@ -32,7 +32,7 @@ int main(int argc, char* argv[]){
 	opterr = 0;
 	int c;
 	if(argc==1) {
-		fprintf(stderr,"Usage:\n-t: print time only\n-d: default count to 10, path to 2\n-g: preform calculations on GPU only\n-c <num of nodes>\n-p <num of paths>");
+		fprintf(stderr,"Usage:\n-t: print time only\n-d: default count to 10, path to 2\n-g: preform calculations on GPU only\n-c <num of nodes>\n-p <num of paths>\n");
 		return 1;
 	}
 
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]){
 					fprintf (stderr, "Option -%c requires an argument.\n", optopt);
 				}
 				else{
-					fprintf(stderr,"Usage:\n-t: print time only\n-d: default count to 10, path to 2\n-g: preform calculations on GPU only\n-c <num of nodes>\n-p <num of paths>");
+					fprintf(stderr,"Usage:\n-t: print time only\n-d: default count to 10, path to 2\n-g: preform calculations on GPU only\n-c <num of nodes>\n-p <num of paths>\n");
 				}
 				return 1;
 			default:
