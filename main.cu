@@ -32,7 +32,7 @@ int main(int argc, char* argv[]){
 	opterr = 0;
 	int c;
 
-	while((c = getopt (argc, argv, "dgtc:p:")) != -1){
+	while((c = getopt (argc, argv, "dgtc:p:a:b:")) != -1){
 		switch (c)
 		{
 			case 'd':
@@ -51,6 +51,12 @@ int main(int argc, char* argv[]){
 			case 'p':
 				path = atoi(optarg);
 				break;
+			case 'a':
+                                count = atoi(optarg);
+                                break;
+                        case 'b':
+                                path = atoi(optarg);
+                                break;
 			case '?':
 				if (optopt == 'c' || optopt == 'p'){
 					fprintf (stderr, "Option -%c requires an argument.\n", optopt);
