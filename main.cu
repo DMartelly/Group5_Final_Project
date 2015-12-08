@@ -20,8 +20,8 @@ int fTime = 0;
 
 //This is the main function
 int main(int argc, char* argv[]){
-	int count;
-	int path;
+	int count = 10;
+	int path = 2;
 	int* adjMatrix = NULL;
 	int gpuOnly = 0;
 
