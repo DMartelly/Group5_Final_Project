@@ -32,7 +32,7 @@ int main(int argc, char* argv[]){
 	opterr = 0;
 	int c;
 
-	while((c = getopt (argc, argv, "dgti:p:")) != -1){
+	while((c = getopt (argc, argv, "dgtc:p:")) != -1){
 		switch (c)
 		{
 			case 'd':
@@ -172,7 +172,7 @@ void CPUMatrixMultiplication(int count, int path, int* matrix){
 }
 //GPU matrix multiplication function
 void GPUMatrixMultiplication(int count, int path, int* matrix, int nodeA, int nodeB){
-	
+
 	int numThreads = NUMTHREADS;
 		
 	//number at index of start*count + end this gets the total number of
