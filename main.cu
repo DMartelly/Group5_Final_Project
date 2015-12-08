@@ -26,7 +26,8 @@ int main(int argc, char* argv[]){
 	int gpuOnly = 0;
 
 	//start and end of the path
-	int start, end;
+	int start = 0;
+	int end = 3;
 	
 	//If there is more than 2 parameters
 	opterr = 0;
@@ -56,10 +57,10 @@ int main(int argc, char* argv[]){
 				path = atoi(optarg);
 				break;
 			case 'a':
-                                count = atoi(optarg);
+                                start = atoi(optarg);
                                 break;
                         case 'b':
-                                path = atoi(optarg);
+                                end = atoi(optarg);
                                 break;
 			case '?':
 				if (optopt == 'c' || optopt == 'p'){
@@ -91,8 +92,6 @@ int main(int argc, char* argv[]){
 	
 	//starting Node is 0 and ending node is 3
 	//temporary test please add commandline args for start and end
-	start = 0;
-	end = 3;
 	//Compute the GPU function
 	GPUMatrixMultiplication(count, path, adjMatrix, start, end);	
 	return 0;
@@ -259,8 +258,9 @@ void GPUMatrixMultiplication(int count, int path, int* matrix, int nodeA, int no
 			for(j = 0; j < path; j++){
 				printf("%d ", paths[i*path + j]);
 			}
-			printf("\n");
+			printf("\n");		
 		}
+	printf("There are %d paths\n", numPaths);
 	}
 }
 
