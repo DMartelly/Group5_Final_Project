@@ -82,7 +82,7 @@ int main(int argc, char* argv[]){
 //takes in a matrix and returns all paths as an int array
 //the int array paths should be a 2d array but for ease of use with cuda it is
 //an linear array just like the matrix
-__global__ void traverse(int* matrix, int* paths, int count, int start, int end, int length){
+__global__ void traverse(int* matrix, int* paths, int count, int start, int end, int length, int numPaths){
 	int element = blockIdx.x*blockDim.x + threadIdx.x;
 
 	//curand = cuda random for random number generation
@@ -104,6 +104,15 @@ __global__ void traverse(int* matrix, int* paths, int count, int start, int end,
 				currNode = end;
 				paths[element*length + currLength] = currNode;
 				currLength++;
+
+				//check for duplicates
+				//int i;
+				//for(i = 0; i < numPaths; i++){
+				//	int j;
+				//	for(j = 0; j < length; j++){
+				//		
+				//	}
+				//}
 			}else{//if we can't connect to the endpoint we restart
 				currLength = 1;
 				currNode = start;
@@ -223,7 +232,7 @@ void GPUMatrixMultiplication(int count, int path, int* matrix, int nodeA, int no
 		int* paths = (int *)malloc(numPaths * sizeof(int) * (path));
 		int* gpuPaths;
 		cudaMalloc(&gpuPaths, (numPaths*path*sizeof(int)));
-		traverse<<<numPaths, 1>>>(gpuMatrix, gpuPaths, count, nodeA, nodeB, path);
+		traverse<<<numPaths, 1>>>(gpuMatrix, gpuPaths, count, nodeA, nodeB, path, numPaths);
 		cudaMemcpy(paths, gpuPaths, (numPaths*(path)*sizeof(int)), cudaMemcpyDeviceToHost);	
 		int i;
 		for(i = 0; i < numPaths; i++){
