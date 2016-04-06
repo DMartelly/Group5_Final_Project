@@ -7,7 +7,8 @@ To run program:
 	-t: print time only
 	-d: default count to 10, path to 2
 	-g: preform calculations on GPU only
-	-c <num of nodes>:
-	-p <num of paths>:
+	-s: show paths
+	-c <num of nodes>
+	-p <num of paths>
 	-a <start node number (0 to c-1)>
 	-b <end node number (0 to c-1)>
