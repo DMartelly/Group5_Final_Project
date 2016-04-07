@@ -221,13 +221,14 @@ void CPUMatrixMultiplication(int count, int path, long* matrix){
 	gettimeofday(&end, NULL);
 
 	//Save the computed time
-	long microseconds = end.tv_usec - start.tv_usec;
+	unsigned int seconds = end.tv_sec - start.tv_sec;
+	unsigned long microseconds = end.tv_usec - start.tv_usec;
 
 	//Print the multiplied matrix
 	printf("CPU Generated matrix:\n");
 	if (!fTimeOnly)
 		printAdjMatrix(count, cpuMM);
-	printf("Took %li microseconds to compute\n\n", microseconds);
+	printf("Took %d seconds, and %lu microseconds to compute\n\n", seconds, microseconds % 1000000);
 	
 	free(cpuMM);
 }
@@ -324,7 +325,7 @@ void GPUMatrixMultiplication(int count, int path, long* matrix, int nodeA, int n
 int main(int argc, char* argv[]){
 	char usageString[500] = ("Usage:\n-t: Print the Calculation Time only\n-d: Default - Set number of nodes to 10, number of paths to 3\n");
 	strcat(usageString,"-g: Preform calculations on GPU only\n-s: Show the paths\n-c <num of nodes>\n-p <num of paths>\n");
-	strcat(usageString,"-a <start node number (0 to c-1)>\n-b <end node number (0 to c-1)>\n");
+	strcat(usageString,"-a <start node number (0 to c-1)>\n-b <end node number (0 to c-1)>\n\n");
 
 	int count; 					//Number of nodes
 	int path;					//Number of paths
@@ -359,6 +360,7 @@ int main(int argc, char* argv[]){
 				break;
 			case 's':
 				fShowPaths = 1;
+				break;
 			//Parameters
 			case 'c':
 				count = atoi(optarg);
