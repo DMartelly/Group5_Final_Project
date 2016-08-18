@@ -1,7 +1,8 @@
-Readme file
+#N-Length-Nodes
 
-This program finds all paths of length N there are in a given undirected graph from A to B, and displays each unique path
+This program finds all paths of length N there are in a given undirected graph from A to B, and displays each unique path. This was my parallel computing program for Structure Computing Organization at FIU
 
+##Running the Program
 To run program:
 ./main
 	-t: print time only
@@ -13,4 +14,4 @@ To run program:
 	-a [start node number (0 to c-1)]
 	-b [end node number (0 to c-1)]
 
-Powerpoint URL: https://docs.google.com/presentation/d/185nvZ292JrA7Kl7j16Ha4DR52WW-hOMRAsug8qLLOrA/edit#slide=id.gdacbef447_0_57
+##Powerpoint URL: https://docs.google.com/presentation/d/185nvZ292JrA7Kl7j16Ha4DR52WW-hOMRAsug8qLLOrA/edit#slide=id.gdacbef447_0_57
